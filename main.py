@@ -81,6 +81,7 @@ for epoch in range(FLAGS.epochs):
 		prediction = model(user, item, FLAGS.num_neg+1)
 		loss = loss_function(prediction, label)
 		loss.backward()
+		#nn.utils.clip_grad_norm(model.parameters(), FLAGS.clip_norm)
 		optimizer.step()
 
 		writer.add_scalar('data/loss', loss.data[0], idx)
