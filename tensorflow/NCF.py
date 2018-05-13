@@ -75,10 +75,10 @@ class NCF(object):
 
 		if self.optim == 'SGD':
 			self.optim = tf.train.GradientDescentOptimizer(self.lr, 
-															name='SGD')
+									name='SGD')
 		elif self.optim == 'RMSProp':
 			self.optimRMSPropOptimizer(self.lr, decay=0.9, momentum=0.0,
-															name='RMSProp')
+									name='RMSProp')
 		elif self.optim == 'Adam':
 			self.optim = tf.train.AdamOptimizer(self.lr, name='Adam')
 
@@ -87,36 +87,36 @@ class NCF(object):
 		""" Create model from scratch. """
 		with tf.name_scope("input"):
 			self.user_onehot = tf.one_hot(self.user, self.user_size,
-														name='user_onehot')
+									name='user_onehot')
 			self.item_onehot = tf.one_hot(self.item, self.item_size,
-														name='item_onehot')
+									name='item_onehot')
 
 		with tf.name_scope("embed"):
 			self.user_embed_GMF = tf.layers.dense(inputs=self.user_onehot,
-											units=self.embed_size,
-											activation=self.activation_func,
-											kernel_initializer=self.initializer,
-											kernel_regularizer=self.regularizer,
-											name='user_embed_GMF')
+								units=self.embed_size,
+								activation=self.activation_func,
+								kernel_initializer=self.initializer,
+								kernel_regularizer=self.regularizer,
+								name='user_embed_GMF')
 			self.item_embed_GMF = tf.layers.dense(inputs=self.item_onehot,
-											units=self.embed_size,
-											activation=self.activation_func,
-											kernel_initializer=self.initializer,
-											kernel_regularizer=self.regularizer,
-											name='item_embed_GMF')
+								units=self.embed_size,
+								activation=self.activation_func,
+								kernel_initializer=self.initializer,
+								kernel_regularizer=self.regularizer,
+								name='item_embed_GMF')
 
 			self.user_embed_MLP = tf.layers.dense(inputs=self.user_onehot,
-											units=self.embed_size,
-											activation=self.activation_func,
-											kernel_initializer=self.initializer,
-											kernel_regularizer=self.regularizer,
-											name='user_embed_MLP')
+								units=self.embed_size,
+								activation=self.activation_func,
+								kernel_initializer=self.initializer,
+								kernel_regularizer=self.regularizer,
+								name='user_embed_MLP')
 			self.item_embed_MLP = tf.layers.dense(inputs=self.item_onehot,
-											units=self.embed_size,
-											activation=self.activation_func,
-											kernel_initializer=self.initializer,
-											kernel_regularizer=self.regularizer,
-											name='item_embed_MLP')
+								units=self.embed_size,
+								activation=self.activation_func,
+								kernel_initializer=self.initializer,
+								kernel_regularizer=self.regularizer,
+								name='item_embed_MLP')
 
 		# GMF part starts
 		with tf.name_scope("GMF"):
@@ -125,42 +125,42 @@ class NCF(object):
 		# MLP part starts
 		with tf.name_scope("MLP"):
 			self.interaction = tf.concat([self.user_embed_MLP, self.item_embed_MLP],
-															axis=-1, name='interaction')
+									axis=-1, name='interaction')
 
 			self.layer1_MLP = tf.layers.dense(inputs=self.interaction,
-											units=self.embed_size*2,
-											activation=self.activation_func,
-											kernel_initializer=self.initializer,
-											kernel_regularizer=self.regularizer,
-											name='layer1_MLP')
+								units=self.embed_size*2,
+								activation=self.activation_func,
+								kernel_initializer=self.initializer,
+								kernel_regularizer=self.regularizer,
+								name='layer1_MLP')
 			self.layer1_MLP = tf.layers.dropout(self.layer1_MLP, rate=self.dropout)
 
 			self.layer2_MLP = tf.layers.dense(inputs=self.layer1_MLP,
-											units=self.embed_size,
-											activation=self.activation_func,
-											kernel_initializer=self.initializer,
-											kernel_regularizer=self.regularizer,
-											name='layer2_MLP')
+								units=self.embed_size,
+								activation=self.activation_func,
+								kernel_initializer=self.initializer,
+								kernel_regularizer=self.regularizer,
+								name='layer2_MLP')
 			self.layer2_MLP = tf.layers.dropout(self.layer2_MLP, rate=self.dropout)
 
 			self.layer3_MLP = tf.layers.dense(inputs=self.layer2_MLP,
-											units=self.embed_size//2,
-											activation=self.activation_func,
-											kernel_initializer=self.initializer,
-											kernel_regularizer=self.regularizer,
-											name='layer3_MLP')
+								units=self.embed_size//2,
+								activation=self.activation_func,
+								kernel_initializer=self.initializer,
+								kernel_regularizer=self.regularizer,
+								name='layer3_MLP')
 			self.layer3_MLP = tf.layers.dropout(self.layer3_MLP, rate=self.dropout)
 
 		# Concate the two parts together
 		with tf.name_scope("concatenation"):
 			self.concatenation = tf.concat([self.GMF, self.layer3_MLP], axis=-1,
-																name='concatenation')
+										name='concatenation')
 			self.logits = tf.layers.dense(inputs=self.concatenation,
-										units=1,
-										activation=None,
-										kernel_initializer=self.initializer,
-										kernel_regularizer=self.regularizer,
-										name='predict')
+								units=1,
+								activation=None,
+								kernel_initializer=self.initializer,
+								kernel_regularizer=self.regularizer,
+								name='predict')
 
 			# unstack logits into [batch_size, num_total]
 			self.logits_dense = tf.reshape(self.logits, [-1])
@@ -169,7 +169,7 @@ class NCF(object):
 			self.loss = tf.reduce_mean(self.loss_func(
 						labels=self.label, logits=self.logits_dense, name='loss'))
 			# self.loss = tf.reduce_mean(self.loss_func(self.label, self.logits),
-			# 														name='loss')
+			# 								name='loss')
 
 		with tf.name_scope("optimzation"):
 			self.optimzer = self.optim.minimize(self.loss)
@@ -204,7 +204,7 @@ class NCF(object):
 		""" Train the model step by step. """
 		if self.is_training:
 			loss, optim, summaries = session.run(
-								[self.loss, self.optimzer, self.summary_op])
+					[self.loss, self.optimzer, self.summary_op])
 			self.writer.add_summary(summaries, global_step=step)
 		else:
 			indice, item = session.run([self.indice, self.item_replica])
