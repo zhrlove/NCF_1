@@ -37,10 +37,10 @@ def train(train_data, test_data, user_size, item_size):
 
 		############################### CREATE MODEL #############################
 		iterator = tf.data.Iterator.from_structure(train_data.output_types, 
-													train_data.output_shapes)
+								train_data.output_shapes)
 		model = NCF.NCF(FLAGS.embedding_size, user_size, item_size,	FLAGS.lr, 
-					FLAGS.optim, FLAGS.initializer, FLAGS.loss_func, FLAGS.activation, 
-					FLAGS.regularizer, iterator, FLAGS.topK, FLAGS.dropout, is_training=True)
+				FLAGS.optim, FLAGS.initializer, FLAGS.loss_func, FLAGS.activation, 
+				FLAGS.regularizer, iterator, FLAGS.topK, FLAGS.dropout, is_training=True)
 		model.build()
 		# train_init_op = iterator.make_initializer(train_data)
 
@@ -66,7 +66,7 @@ def train(train_data, test_data, user_size, item_size):
 					count += 1
 			except tf.errors.OutOfRangeError:
 				print("Epoch %d training " %epoch + "Took: " + time.strftime("%H: %M: %S", 
-											time.gmtime(time.time() - start_time)))
+									time.gmtime(time.time() - start_time)))
 
 		################################ EVALUATION ##################################
 			sess.run(model.iterator.make_initializer(test_data))
@@ -88,7 +88,7 @@ def train(train_data, test_data, user_size, item_size):
 				mrr = np.array(MRR).mean()
 				ndcg = np.array(NDCG).mean()
 				print("Epoch %d testing  " %epoch + "Took: " + time.strftime("%H: %M: %S", 
-												time.gmtime(time.time() - start_time)))
+									time.gmtime(time.time() - start_time)))
 				print("HR is %.3f, MRR is %.3f, NDCG is %.3f" %(hr, mrr, ndcg))
 
 		################################## SAVE MODEL ################################
@@ -102,9 +102,9 @@ def main(argv=None):
 	(user_bought, user_negative)) = NCF_input.load_data(FLAGS.negative_num)
 
 	train_data = NCF_input.train_input_fn(train_features, train_labels,
-							FLAGS.batch_size, user_negative, FLAGS.negative_num)
+						FLAGS.batch_size, user_negative, FLAGS.negative_num)
 	test_data = NCF_input.eval_input_fn(test_features, test_labels,
-											user_negative, FLAGS.test_neg)
+						user_negative, FLAGS.test_neg)
 
 	# train_iterator = train_data.make_initializable_iterator()
 	# test_iterator = test_data.make_initializable_iterator()
