@@ -100,7 +100,7 @@ def add_negative(features, user_negative, labels, numbers, is_training):
 
 		#uniformly sample negative ones from candidate negative items
 		neg_samples = np.random.choice(user_negative[user], size=numbers, 
-													replace=False).tolist()
+								replace=False).tolist()
 
 		if is_training:
 			for k in neg_samples:
@@ -125,10 +125,10 @@ def dump_data(features, labels, user_negative, num_neg, is_training):
 		os.makedirs(DATA_PATH)
 
 	features, labels = add_negative(features, user_negative, 
-												labels, num_neg, is_training)
+						labels, num_neg, is_training)
 
 	data_dict = dict([('user', features['user']), 
-							('item', features['item']), ('label', labels)])
+				('item', features['item']), ('label', labels)])
 	if is_training:
 		np.save(os.path.join(DATA_PATH, 'train_data.npy'), data_dict)
 	else:
