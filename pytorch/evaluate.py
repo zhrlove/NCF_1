@@ -13,7 +13,7 @@ def hit(gt_item, pred_items):
 def ndcg(gt_item, pred_items):
 	if gt_item in pred_items:
 		index = torch.tensor(pred_items.tolist().index(gt_item),
-												dtype=torch.float32)
+							dtype=torch.float32)
 		return torch.reciprocal(torch.log2(index+2))
 	return 0
 
