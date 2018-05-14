@@ -49,7 +49,6 @@ class NCF(nn.Module):
 		self.predict_layer = nn.Linear(embed_size*3//2, 1)
 		self.predict_layer.apply(init_weights)
 
-
 	def convert_one_hot(self, feature, size):
 		""" Convert user and item ids into one-hot format. """
 		batch_size = feature.shape[0]
@@ -59,7 +58,6 @@ class NCF(nn.Module):
 		f_onehot.scatter_(-1, feature, 1)
 
 		return f_onehot
-
 
 	def forward(self, user, item):
 		user = self.convert_one_hot(user, self.user_size)
