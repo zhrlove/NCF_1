@@ -76,8 +76,8 @@ class NCF(object):
 			self.optim = tf.train.GradientDescentOptimizer(self.lr, 
 									name='SGD')
 		elif self.optim == 'RMSProp':
-			self.optimRMSPropOptimizer(self.lr, decay=0.9, momentum=0.0,
-									name='RMSProp')
+			self.optim = tf.train.RMSPropOptimizer(self.lr, decay=0.9, 
+							   momentum=0.0, name='RMSProp')
 		elif self.optim == 'Adam':
 			self.optim = tf.train.AdamOptimizer(self.lr, name='Adam')
 
