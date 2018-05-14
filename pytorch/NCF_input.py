@@ -23,7 +23,6 @@ def re_index(s):
 
 	return s_map
 
-
 def load_data():
 	full_data = pd.read_csv(
 		DATA_DIR, sep='::', header=None, names=COLUMN_NAMES, 
@@ -86,7 +85,6 @@ def load_data():
 			(user_size, item_size), 
 			(user_set, item_set), 
 			(user_bought, user_negative))
-
 
 def add_negative(features, labels, user_negative, numbers, is_training):
 	""" Adding negative samples to training and testing data. """
