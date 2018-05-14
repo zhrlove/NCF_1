@@ -45,8 +45,7 @@ class NCF(object):
 
 		self.user = sample['user']
 		self.item = sample['item']
-		self.label = tf.cast(sample['label'], tf.float32)
-		
+		self.label = tf.cast(sample['label'], tf.float32)		
 
 	def inference(self):
 		""" Initialize important settings """
@@ -82,7 +81,6 @@ class NCF(object):
 		elif self.optim == 'Adam':
 			self.optim = tf.train.AdamOptimizer(self.lr, name='Adam')
 
-	
 	def create_model(self):
 		""" Create model from scratch. """
 		with tf.name_scope("input"):
@@ -174,13 +172,11 @@ class NCF(object):
 		with tf.name_scope("optimzation"):
 			self.optimzer = self.optim.minimize(self.loss)
 
-
 	def eval(self):
 		with tf.name_scope("evaluation"):
 			self.item_replica = self.item
 			_, self.indice = tf.nn.top_k(tf.sigmoid(self.logits_dense), self.topk)
 
-	
 	def summary(self):
 		""" Create summaries to write on tensorboard. """
 		self.writer = tf.summary.FileWriter('./graphs/NCF', tf.get_default_graph())
@@ -188,7 +184,6 @@ class NCF(object):
 			tf.summary.scalar('loss', self.loss)
 			tf.summary.histogram('histogram loss', self.loss)
 			self.summary_op = tf.summary.merge_all()
-
 
 	def build(self):
 		""" Build the computation graph. """
@@ -198,7 +193,6 @@ class NCF(object):
 		self.eval()
 		self.summary()
 		self.saver = tf.train.Saver(tf.global_variables())
-
 
 	def step(self, session, step):
 		""" Train the model step by step. """
