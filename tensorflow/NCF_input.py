@@ -22,7 +22,6 @@ def re_index(s):
 
 	return s_map
 
-
 def load_data(negative_num):
 	full_data = pd.read_csv(
 		DATA_DIR, sep='::', header=None, names=COLUMN_NAMES, 
@@ -85,7 +84,6 @@ def load_data(negative_num):
 			(user_size, item_size), 
 			(user_bought, user_negative))
 
-
 def add_negative(features, user_negative, labels, numbers, is_training):
 	feature_user, feature_item, labels_add, features_dict = [], [], [], {}
 	#every iteration sample different negative samples and add them to features.
@@ -118,7 +116,6 @@ def add_negative(features, user_negative, labels, numbers, is_training):
 
 	return features_dict, labels_add
 
-
 def dump_data(features, labels, user_negative, num_neg, is_training):
 	""" Dump raw file into disk. """
 	if not os.path.exists(DATA_PATH):
@@ -134,7 +131,6 @@ def dump_data(features, labels, user_negative, num_neg, is_training):
 	else:
 		np.save(os.path.join(DATA_PATH, 'test_data.npy'), data_dict)
 
-
 def train_input_fn(features, labels, batch_size, user_negative, num_neg):
 	""" Construct training dataset. """
 	data_path = os.path.join(DATA_PATH, 'train_data.npy')
@@ -147,7 +143,6 @@ def train_input_fn(features, labels, batch_size, user_negative, num_neg):
 	dataset = dataset.shuffle(100000).batch(batch_size)
 
 	return dataset
-
 
 def eval_input_fn(features, labels, user_negative, test_neg):
 	""" Construct testing dataset. """
