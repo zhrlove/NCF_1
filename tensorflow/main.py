@@ -24,10 +24,13 @@ tf.app.flags.DEFINE_string('initializer', 'Xavier', 'the initializer method.')
 tf.app.flags.DEFINE_string('loss_func', 'cross_entropy', 'the loss function.')
 tf.app.flags.DEFINE_string('activation', 'ReLU', 'the activation function.')
 tf.app.flags.DEFINE_string('model_dir', './', 'the dir for saving model.')
+tf.app.flags.DEFINE_string('gpu', '0', 'the gpu card number.')
 tf.app.flags.DEFINE_float('regularizer', 0.0, 'the regularizer rate.')
 tf.app.flags.DEFINE_float('lr', 0.001, 'learning rate.')
 tf.app.flags.DEFINE_float('dropout', 0.0, 'dropout rate.')
 
+opt_gpu = FLAGS.gpu
+os.environ["CUDA_VISIBLE_DEVICES"] = opt_gpu
 
 def train(train_data, test_data, user_size, item_size):
 	config = tf.ConfigProto()
