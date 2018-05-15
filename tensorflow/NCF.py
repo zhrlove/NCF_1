@@ -13,7 +13,7 @@ import metrics
 class NCF(object):
 	def __init__(self, embed_size, user_size, item_size, lr, 
 				optim, initializer, loss_func, activation_func, 
-				regularizer, iterator, topk, dropout, is_training):
+				regularizer_rate, iterator, topk, dropout, is_training):
 		"""
 		Important Arguments.
 
@@ -21,7 +21,7 @@ class NCF(object):
 		optim: The optimization method chosen in this model.
 		initializer: The initialization method.
 		loss_func: Loss function, we choose the cross entropy.
-		regularizer: L2 is chosen, this represents the L2 rate.
+		regularizer_rate: L2 is chosen, this represents the L2 rate.
 		iterator: Input dataset.
 		topk: For evaluation, computing the topk items.
 		"""
@@ -32,7 +32,7 @@ class NCF(object):
 		self.initializer = initializer
 		self.loss_func = loss_func
 		self.activation_func = activation_func
-		self.regularizer = regularizer
+		self.regularizer_rate = regularizer_rate
 		self.optim = optim
 		self.topk = topk
 		self.dropout = dropout
@@ -49,7 +49,7 @@ class NCF(object):
 
 	def inference(self):
 		""" Initialize important settings """
-		self.regularizer = tf.contrib.layers.l2_regularizer(self.regularizer)
+		self.regularizer = tf.contrib.layers.l2_regularizer(self.regularizer_rate)
 
 		if self.initializer == 'Normal':
 			self.initializer = tf.truncated_normal_initializer(stddev=0.01)
@@ -164,6 +164,10 @@ class NCF(object):
 			self.logits_dense = tf.reshape(self.logits, [-1])
 
 		with tf.name_scope("loss"):
+			reg = tf.get_collection(tf.GraphKeys.REGULARIZATION_LOSSES)
+			reg_loss = tf.contrib.layers.apply_regularization(
+										self.regularizer, reg)
+			
 			self.loss = tf.reduce_mean(self.loss_func(
 						labels=self.label, logits=self.logits_dense, name='loss'))
 			# self.loss = tf.reduce_mean(self.loss_func(self.label, self.logits),
