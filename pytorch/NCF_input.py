@@ -101,7 +101,7 @@ def add_negative(features, labels, user_negative, numbers, is_training):
 
 		#uniformly sample negative ones from candidate negative items
 		neg_samples = np.random.choice(user_negative[user], size=numbers, 
-													replace=False).tolist()
+								replace=False).tolist()
 
 		if is_training:
 			for k in neg_samples:
