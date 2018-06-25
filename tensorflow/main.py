@@ -60,7 +60,6 @@ def train(train_data, test_data, user_size, item_size):
 		for epoch in range(FLAGS.epochs):
 			sess.run(model.iterator.make_initializer(train_data))	
 			model.is_training = True
-			model.get_data()
 			start_time = time.time()
 
 			try:
@@ -74,7 +73,6 @@ def train(train_data, test_data, user_size, item_size):
 		################################ EVALUATION ##################################
 			sess.run(model.iterator.make_initializer(test_data))
 			model.is_training = False
-			model.get_data()						
 			start_time = time.time()
 			HR, MRR, NDCG = [], [], []
 
